@@ -1,0 +1,4 @@
+framework module ExtentionSDK {
+  header "ExtentionSDK-Swift.h"
+  requires objc
+}

@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
 s.name         = "ExtentionSDK"
-s.version      = "0.0.6"
+s.version      = "0.0.7"
 s.summary      = "ExtentionSDK"
 s.license      = { :type => "MIT", :file => "LICENSE" }
 
@@ -14,7 +14,9 @@ s.author        = { "龚洪" => "864797268@qq.com" }
 s.platform      = :ios, "11.0"
 s.source        = { :git => "https://github.com/Epoch2022-iOS/ExtentionSDK.git", :tag => s.version }
 
-s.vendored_frameworks = 'ExtentionSDK.framework'
+#s.vendored_frameworks = 'ExtentionSDK.framework'
+s.source_files = "ExtentionSDK/*.{swift}"
+
 
 # 让SDK支持真机和模拟器
 s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }

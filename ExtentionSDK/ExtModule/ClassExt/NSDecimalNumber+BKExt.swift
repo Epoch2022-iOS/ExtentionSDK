@@ -1,0 +1,99 @@
+//
+//  NSDecimalNumber+BKExt.swift
+//  ExtentionSDK
+//
+//  Created by 清风徐来 on 2023/5/15.
+//
+
+import Foundation
+import UIKit
+
+extension NSDecimalNumber {
+    var isNan: Bool {
+        return self == NSDecimalNumber.notANumber
+    }
+}
+
+extension NSDecimalNumber {
+    
+    /// 根据范例小数点位数格式化
+    func formatter(withExample example: NSDecimalNumber) -> NSDecimalNumber {
+        let number = example.stringValue.components(separatedBy: ".").last?.count ?? 0
+        let roundBankers = NSDecimalNumberHandler(
+            roundingMode: .plain,
+            scale: Int16(number),
+            raiseOnExactness: false,
+            raiseOnOverflow: false,
+            raiseOnUnderflow: false,
+            raiseOnDivideByZero: false)
+        return rounding(accordingToBehavior: roundBankers)
+    }
+    
+    /// 根据小数位格式化
+    func formatter(withDecimalsNumber decimalsNumber: Int16) -> NSDecimalNumber {
+        let roundBankers = NSDecimalNumberHandler(
+            roundingMode: .plain,
+            scale: decimalsNumber,
+            raiseOnExactness: false,
+            raiseOnOverflow: false,
+            raiseOnUnderflow: false,
+            raiseOnDivideByZero: false)
+        return rounding(accordingToBehavior: roundBankers)
+    }
+    
+    /// 根据范例小数点位数格式化
+    func stringFormatter(withExample example: NSDecimalNumber) -> String {
+        let decimal = formatter(withExample: example)
+        var string = decimal.stringValue
+        var currentNumber = string.components(separatedBy: ".").last?.count ?? 0
+        let exampleNumber = example.stringValue.components(separatedBy: ".").last?.count ?? 0
+        if !example.stringValue.contains(".") {
+            return string
+        } else {
+            if !string.contains(".") {
+                currentNumber = 0
+                string += "."
+            }
+            for _ in 0..<max(exampleNumber - currentNumber, 0) {
+                string += "0"
+            }
+            return string
+        }
+    }
+    
+    /// 根据小数位格式化
+    func stringFormatter(withDecimalsNumber decimalsNumber: Int16) -> String {
+        let decimal = formatter(withDecimalsNumber: decimalsNumber)
+        var string = decimal.stringValue
+        var currentNumber = string.components(separatedBy: ".").last?.count ?? 0
+        if !string.contains(".") && decimalsNumber != 0 {
+            currentNumber = 0
+            string += "."
+        }
+        for _ in 0..<max(Int(decimalsNumber) - currentNumber, 0) {
+            string += "0"
+        }
+        return string
+    }
+    
+}
+
+extension NSDecimalNumber {
+    
+    func moreThan(_ decimalsNumber: NSDecimalNumber) -> Bool {
+        return compare(decimalsNumber) == .orderedDescending && !isNan && !decimalsNumber.isNan
+    }
+    
+    func moreOrEqualThan(_ decimalsNumber: NSDecimalNumber) -> Bool {
+        return compare(decimalsNumber) != .orderedAscending && !isNan && !decimalsNumber.isNan
+    }
+    
+    func lessThan(_ decimalsNumber: NSDecimalNumber) -> Bool {
+        return compare(decimalsNumber) == .orderedAscending && !isNan && !decimalsNumber.isNan
+    }
+    
+    func lessOrEqualThan(_ decimalsNumber: NSDecimalNumber) -> Bool {
+        return compare(decimalsNumber) != .orderedDescending && !isNan && !decimalsNumber.isNan
+    }
+    
+}
